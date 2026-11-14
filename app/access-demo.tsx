@@ -1,6 +1,7 @@
 import { isIP } from "node:net";
 import Link from "next/link";
 import { headers } from "next/headers";
+import { BrowserObservations } from "@/app/browser-observations";
 
 export const dynamic = "force-dynamic";
 
@@ -90,6 +91,7 @@ export default async function AccessDemo({ path }: { path: "/" | "/participate" 
             ni parámetros de esta URL; el proveedor de alojamiento podría conservar
             sus propios logs.
           </p>
+          <BrowserObservations />
           <Link className="primary-button participate-home-link" href="/dashboard" prefetch={false}>Entrar al dashboard privado</Link>
         </section>
       </div>

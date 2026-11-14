@@ -860,6 +860,18 @@ button:focus-visible {
   font-size: 12px !important;
 }
 
+.browser-observations {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.browser-observations h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 550;
+}
+
 .participate-home-link {
   display: inline-flex;
   width: auto;
