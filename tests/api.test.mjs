@@ -118,10 +118,41 @@ test("the public home logs a visit while the dashboard and event reads require a
   assert.equal(publicPage.status, 200);
   assert.match(publicHtml, /Datos visibles en esta solicitud/);
   assert.match(publicHtml, /Datos que JavaScript puede leer/);
-  assert.match(publicHtml, /no los envía al servidor ni los guarda/);
+  assert.match(publicHtml, /los escribe con nivel info en los logs de función de Vercel/);
   assert.match(publicHtml, /Esta demo no envía la IP a servicios de geolocalización/);
   assert.doesNotMatch(publicHtml, /<h2 id="login-title">Entrar al dashboard|type="password"/);
   assert.match(serverOutput, /\[access-log\].*"path":"\/"/);
+
+  const browserObservations = await fetch(`${baseUrl}/api/browser-observations`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      languages: "es-419,es",
+      timeZone: "America/Bogota",
+      screen: { width: 1920, height: 1080 },
+      viewport: { width: 1365, height: 768 },
+      colorScheme: "Claro",
+      cookie: "must-not-be-logged",
+    }),
+  });
+  assert.equal(browserObservations.status, 202);
+  const browserLogLine = serverOutput.match(/\[browser-observations\].*/)?.[0] ?? "";
+  assert.match(browserLogLine, /"timeZone":"America\/Bogota"/);
+  assert.match(browserLogLine, /"screen":\{"width":1920,"height":1080\}/);
+  assert.doesNotMatch(browserLogLine, /must-not-be-logged/);
+
+  const invalidObservations = await fetch(`${baseUrl}/api/browser-observations`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      languages: "es",
+      timeZone: "America/Bogota\nforged-log-line",
+      screen: { width: 1920, height: 1080 },
+      viewport: { width: 1365, height: 768 },
+      colorScheme: "Claro",
+    }),
+  });
+  assert.equal(invalidObservations.status, 400);
 
   const loginPage = await fetch(`${baseUrl}/dashboard`);
   assert.equal(loginPage.status, 200);
