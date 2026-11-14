@@ -76,7 +76,7 @@ export function LoginPanel() {
             {pending ? "Verificando…" : "Iniciar sesión"}
           </button>
           <div className="login-footnote">Las credenciales nunca se envían al navegador como configuración ni se guardan en el almacenamiento local.</div>
-          <Link className="participate-link" href="/participate" prefetch={false}>Ver datos del registro del servidor</Link>
+          <Link className="participate-link" href="/" prefetch={false}>Abrir la demo pública</Link>
         </form>
       </section>
     </main>

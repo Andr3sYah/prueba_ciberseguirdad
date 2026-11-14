@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function ParticipantsPage() {
   const cookieStore = await cookies();
   if (!verifySessionToken(cookieStore.get(SESSION_COOKIE)?.value, process.env.SESSION_SECRET)) {
-    redirect("/");
+    redirect("/dashboard");
   }
 
   return <ParticipantsPanel />;
