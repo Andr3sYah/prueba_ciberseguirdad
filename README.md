@@ -58,7 +58,7 @@ First, run the development server:
  - `GET /api/events`: devuelve los últimos 200 eventos; requiere sesión.
  - `POST /api/events`: ingesta protegida por clave.
  - `POST /api/simulate`: genera eventos ficticios; requiere sesión.
-- `GET /participate`: muestra la IP reportada por el proxy y las cabeceras de plataforma y User-Agent de esa solicitud. Emite esos valores como JSON en los logs del servidor; la aplicación no los guarda en la base de datos.
+- `GET /participate`: muestra y escribe en los logs del servidor la hora, método y ruta fija, IP reportada por el proxy, host, plataforma, User-Agent, tipos de contenido e idiomas aceptados, origen del referente, contexto de navegación (`Sec-Fetch-*`) y señales de privacidad (`DNT`, `Sec-GPC`) recibidos en esa solicitud. El referente se reduce al origen para no registrar rutas ni parámetros. Estos datos no se guardan en la base de datos de la aplicación.
 - `POST /api/consent`: guarda solo después de aceptar el consentimiento requerido.
 - `GET /dashboard/participants`: lista las participaciones; requiere sesión válida.
 
@@ -70,7 +70,7 @@ El formulario solicita un alias opcional, un motivo obligatorio y un mensaje opc
 
 La variable `DATABASE_URL` debe contener la cadena de conexión Neon **rotada y nueva**. No reutilices una credencial que haya sido compartida en chats, código o logs. La cadena solo se lee en el servidor y nunca usa el prefijo `NEXT_PUBLIC_`.
 
-La página `/participate` no envía estos datos a Neon ni a Supabase. Solo muestra y escribe en la salida de logs del servidor la IP reportada por el proxy y las cabeceras User-Agent/plataforma de la solicitud actual. La IP depende de la configuración del proxy; el User-Agent es declarado por el navegador. El proveedor de alojamiento puede conservar sus propios logs según su configuración.
+La página `/participate` no envía estos datos a Neon ni a Supabase. Muestra y escribe en los logs de la aplicación metadatos de la solicitud HTTP que el servidor recibe normalmente: hora, método/ruta, IP reportada por el proxy, host, tipos de contenido e idiomas aceptados, referente (solo origen), User-Agent, plataforma, contexto `Sec-Fetch-*` y señales `DNT`/`Sec-GPC`. Los valores de cabeceras se limitan y se eliminan caracteres de control antes de registrarse. No se leen cookies, contenido de formularios ni parámetros de URL para este registro. La IP depende de la configuración del proxy y no debe considerarse confiable si los encabezados de proxy pueden ser enviados directamente por clientes; User-Agent, idioma y sugerencias del navegador son valores declarados y pueden ser inexactos. El proveedor de alojamiento puede conservar sus propios logs según su configuración y política de retención.
 
 Crea la tabla en Neon antes de habilitar envíos:
 

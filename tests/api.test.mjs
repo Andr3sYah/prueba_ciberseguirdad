@@ -123,22 +123,41 @@ test("dashboard and event reads require a signed session", async () => {
   assert.equal(events.status, 401);
 
   const storedRowsBeforeVisit = rows.length;
-  const participation = await fetch(`${baseUrl}/participate`, {
+  const participation = await fetch(`${baseUrl}/participate?token=do-not-log`, {
     headers: {
       "sec-ch-ua-platform": "\"Windows\"",
       "user-agent": "University Lab Browser/1.0",
+      "accept": "text/html,application/xhtml+xml",
+      "accept-language": "es-419,es;q=0.9,en;q=0.8",
+      "referer": "https://course.example.test/lesson?student=private",
+      "sec-fetch-site": "same-origin",
+      "sec-fetch-dest": "document",
+      "dnt": "1",
+      "sec-gpc": "1",
       "x-real-ip": "203.0.113.42",
+      "cookie": "session=do-not-log",
     },
   });
   const participationHtml = await participation.text();
+  const accessLogHtml = participationHtml.match(/<dl class="access-log-list">([\s\S]*?)<\/dl>/)?.[1]?.replace(/<!--.*?-->/g, "") ?? "";
   assert.equal(participation.status, 200);
   assert.match(participationHtml, /Datos visibles en esta solicitud/);
   assert.match(participationHtml, /203\.0\.113\.42/);
   assert.match(participationHtml, /University Lab Browser\/1\.0/);
   assert.match(participationHtml, /Windows/);
+  assert.match(participationHtml, /text\/html,application\/xhtml\+xml/);
+  assert.match(participationHtml, /es-419,es;q=0\.9,en;q=0\.8/);
+  assert.match(participationHtml, /https:\/\/course\.example\.test/);
+  assert.doesNotMatch(participationHtml, /student=private/);
+  assert.doesNotMatch(accessLogHtml, /do-not-log|student=private/);
+  assert.match(accessLogHtml, /GET \/participate/);
+  assert.match(accessLogHtml, /same-origin \/ cors \/ document/);
+  assert.match(accessLogHtml, /DNT: 1 \/ GPC: 1/);
   assert.doesNotMatch(participationHtml, /<form|Tú decides qué compartir|Motivo de participación/);
   assert.equal(rows.length, storedRowsBeforeVisit);
-  assert.match(serverOutput, /\[access-log\].*"ip":"203\.0\.113\.42".*"userAgent":"University Lab Browser\/1\.0"/);
+  assert.match(serverOutput, /\[access-log\].*"ip":"203\.0\.113\.42".*"userAgent":"University Lab Browser\/1\.0".*"acceptLanguage":"es-419,es;q=0\.9,en;q=0\.8".*"refererOrigin":"https:\/\/course\.example\.test"/);
+  assert.doesNotMatch(serverOutput.match(/\[access-log\].*/)?.[0] ?? "", /student=private/);
+  assert.doesNotMatch(serverOutput.match(/\[access-log\].*/)?.[0] ?? "", /do-not-log/);
 });
 
 test("ingestion rejects missing credentials and invalid event payloads", async () => {
