@@ -52,13 +52,13 @@ export function ParticipantsPanel() {
   return (
     <main className="participants-page">
       <header className="topbar">
-        <Link className="brand-lockup" href="/" aria-label="Signal Desk, dashboard">
+        <Link className="brand-lockup" href="/dashboard" aria-label="Signal Desk, dashboard">
           <span className="brand-mark" aria-hidden="true">SD</span>
           <span className="brand-name">Signal Desk <span>/ REGISTROS CONSENTIDOS</span></span>
         </Link>
         <nav className="toolbar" aria-label="Navegación de registros">
           <Link className="secondary-button" href="/participate" prefetch={false}>Ver registro del servidor</Link>
-          <Link className="secondary-button" href="/">Volver al dashboard</Link>
+          <Link className="secondary-button" href="/dashboard">Volver al dashboard</Link>
         </nav>
       </header>
 

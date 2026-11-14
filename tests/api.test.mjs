@@ -112,12 +112,17 @@ after(async () => {
   if (databaseServer?.listening) await new Promise((resolve) => databaseServer.close(resolve));
 });
 
-test("dashboard and event reads require a signed session", async () => {
+test("the public home logs a visit while the dashboard and event reads require a session", async () => {
   const publicPage = await fetch(baseUrl);
   const publicHtml = await publicPage.text();
   assert.equal(publicPage.status, 200);
-  assert.match(publicHtml, /Entrar al dashboard/);
-  assert.doesNotMatch(publicHtml, /Eventos recibidos/);
+  assert.match(publicHtml, /Datos visibles en esta solicitud/);
+  assert.doesNotMatch(publicHtml, /<h2 id="login-title">Entrar al dashboard|type="password"/);
+  assert.match(serverOutput, /\[access-log\].*"path":"\/"/);
+
+  const loginPage = await fetch(`${baseUrl}/dashboard`);
+  assert.equal(loginPage.status, 200);
+  assert.match(await loginPage.text(), /Entrar al dashboard/);
 
   const events = await fetch(`${baseUrl}/api/events`);
   assert.equal(events.status, 401);
@@ -252,7 +257,7 @@ test("valid ingestion persists, simulation appears in the protected dashboard", 
   assert.equal(result.events.filter((event) => event.source === "simulation").length, 8);
   assert.ok(result.events.some((event) => event.eventName === "page_view" && event.source === "sdk"));
 
-  const privatePage = await fetch(baseUrl, { headers: { Cookie: sessionCookie } });
+  const privatePage = await fetch(`${baseUrl}/dashboard`, { headers: { Cookie: sessionCookie } });
   const privateHtml = await privatePage.text();
   assert.match(privateHtml, /Eventos recibidos/);
   assert.match(privateHtml, /sintético/);
@@ -314,7 +319,7 @@ test("consent is required, contact permission is separate, and records are priva
 
   const publicPage = await fetch(`${baseUrl}/dashboard/participants`, { redirect: "manual" });
   assert.equal(publicPage.status, 307);
-  assert.ok(publicPage.headers.get("location")?.endsWith("/"));
+  assert.ok(publicPage.headers.get("location")?.endsWith("/dashboard"));
 });
 
 test("HTTP and connection failures do not leak service diagnostics", async () => {
