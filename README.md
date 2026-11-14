@@ -34,7 +34,7 @@ First, run the development server:
  npm run dev
  ```
 
- Abre <http://localhost:3000> para ver la demo pública: basta con visitar la página para que el servidor registre los metadatos de esa solicitud y los muestre. El dashboard privado, en <http://localhost:3000/dashboard>, requiere iniciar sesión. **Generar datos de prueba** guarda ocho eventos sintéticos y los identifica como `simulation`.
+ Abre <http://localhost:3000> para ver la demo pública: basta con visitar la página para que el servidor registre los metadatos de esa solicitud y los muestre. Tras cargar, una sección separada muestra idioma, zona horaria, dimensiones y preferencia de color que JavaScript puede leer localmente; no se envían al servidor ni se guardan. No se hace una consulta GeoIP externa. El dashboard privado, en <http://localhost:3000/dashboard>, requiere iniciar sesión. **Generar datos de prueba** guarda ocho eventos sintéticos y los identifica como `simulation`.
 
  ## Ingesta de eventos
 

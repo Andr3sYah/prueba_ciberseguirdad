@@ -117,6 +117,9 @@ test("the public home logs a visit while the dashboard and event reads require a
   const publicHtml = await publicPage.text();
   assert.equal(publicPage.status, 200);
   assert.match(publicHtml, /Datos visibles en esta solicitud/);
+  assert.match(publicHtml, /Datos que JavaScript puede leer/);
+  assert.match(publicHtml, /no los envía al servidor ni los guarda/);
+  assert.match(publicHtml, /Esta demo no envía la IP a servicios de geolocalización/);
   assert.doesNotMatch(publicHtml, /<h2 id="login-title">Entrar al dashboard|type="password"/);
   assert.match(serverOutput, /\[access-log\].*"path":"\/"/);
 
@@ -163,6 +166,7 @@ test("the public home logs a visit while the dashboard and event reads require a
   assert.match(serverOutput, /\[access-log\].*"ip":"203\.0\.113\.42".*"userAgent":"University Lab Browser\/1\.0".*"acceptLanguage":"es-419,es;q=0\.9,en;q=0\.8".*"refererOrigin":"https:\/\/course\.example\.test"/);
   assert.doesNotMatch(serverOutput.match(/\[access-log\].*/)?.[0] ?? "", /student=private/);
   assert.doesNotMatch(serverOutput.match(/\[access-log\].*/)?.[0] ?? "", /do-not-log/);
+  assert.doesNotMatch(serverOutput.match(/\[access-log\].*"path":"\/".*/)?.[0] ?? "", /timeZone|viewport|screen/);
 });
 
 test("ingestion rejects missing credentials and invalid event payloads", async () => {
