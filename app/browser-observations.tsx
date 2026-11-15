@@ -10,7 +10,7 @@ type BrowserObservations = {
   colorScheme: string;
 };
 
-export function BrowserObservations() {
+export function BrowserObservations({ visible = true }: { visible?: boolean }) {
   const [observations, setObservations] = useState<BrowserObservations | null>(null);
   const [logStatus, setLogStatus] = useState<"sending" | "sent" | "error">("sending");
 
@@ -41,6 +41,8 @@ export function BrowserObservations() {
 
     return () => window.clearTimeout(timer);
   }, []);
+
+  if (!visible) return null;
 
   return (
     <section className="browser-observations" aria-labelledby="browser-observations-title">

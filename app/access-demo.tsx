@@ -50,6 +50,54 @@ export default async function AccessDemo({ path }: { path: "/" | "/participate" 
 
   console.info(`[access-log] ${JSON.stringify(accessLog)}`);
 
+  if (path === "/") {
+    return (
+      <main className="participate-shell home-gallery-shell">
+        <header className="participate-header">
+          <Link className="brand-lockup" href="/" aria-label="Signal Desk, inicio">
+            <span className="brand-mark" aria-hidden="true">SD</span>
+            <span className="brand-name">Signal Desk <span>/ OBSERVATORIO DIGITAL</span></span>
+          </Link>
+          <Link className="secondary-button" href="/dashboard">Acceso del equipo</Link>
+        </header>
+
+        <div className="participate-main home-gallery-main">
+          <section className="home-gallery" aria-labelledby="home-gallery-title">
+            <div className="eyebrow"><span className="eyebrow-dot" /> DEMO UNIVERSITARIA · PRIVACIDAD EN LA WEB</div>
+            <h1 id="home-gallery-title">Lo que una visita puede revelar</h1>
+            <p className="home-gallery-intro">
+              Cada página deja una huella técnica. Este collage acompañará una
+              exploración visual de los datos que compartimos al navegar.
+            </p>
+            <p className="home-gallery-privacy-note">
+              La visita y algunas señales básicas del navegador se registran en los logs
+              del servidor como parte de esta práctica universitaria.
+            </p>
+            <p className="home-gallery-hint">
+              Agrega tus imágenes en <code>public/images/</code> con los nombres indicados.
+            </p>
+
+            <div className="home-gallery-grid" aria-label="Collage de imágenes de la demo">
+              <figure className="home-gallery-tile home-gallery-tile-1" role="img" aria-label="Primera imagen del collage">
+                <figcaption>01 <span>collage-01.jpg</span></figcaption>
+              </figure>
+              <figure className="home-gallery-tile home-gallery-tile-2" role="img" aria-label="Segunda imagen del collage">
+                <figcaption>02 <span>collage-02.jpg</span></figcaption>
+              </figure>
+              <figure className="home-gallery-tile home-gallery-tile-3" role="img" aria-label="Tercera imagen del collage">
+                <figcaption>03 <span>collage-03.jpg</span></figcaption>
+              </figure>
+              <figure className="home-gallery-tile home-gallery-tile-4" role="img" aria-label="Cuarta imagen del collage">
+                <figcaption>04 <span>collage-04.jpg</span></figcaption>
+              </figure>
+            </div>
+          </section>
+          <BrowserObservations visible={false} />
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="participate-shell">
       <header className="participate-header">

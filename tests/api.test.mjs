@@ -116,10 +116,12 @@ test("the public home logs a visit while the dashboard and event reads require a
   const publicPage = await fetch(baseUrl);
   const publicHtml = await publicPage.text();
   assert.equal(publicPage.status, 200);
-  assert.match(publicHtml, /Datos visibles en esta solicitud/);
-  assert.match(publicHtml, /Datos que JavaScript puede leer/);
-  assert.match(publicHtml, /los escribe con nivel info en los logs de función de Vercel/);
-  assert.match(publicHtml, /Esta demo no envía la IP a servicios de geolocalización/);
+  assert.match(publicHtml, /Lo que una visita puede revelar/);
+  assert.match(publicHtml, /collage-01\.jpg/);
+  assert.match(publicHtml, /collage-02\.jpg/);
+  assert.match(publicHtml, /collage-03\.jpg/);
+  assert.match(publicHtml, /collage-04\.jpg/);
+  assert.doesNotMatch(publicHtml, /Datos visibles en esta solicitud|IP reportada por el proxy/);
   assert.doesNotMatch(publicHtml, /<h2 id="login-title">Entrar al dashboard|type="password"/);
   assert.match(serverOutput, /\[access-log\].*"path":"\/"/);
 

@@ -56,6 +56,7 @@ First, run the development server:
  - `POST /api/auth/login`: inicia una sesión con cookie HttpOnly, SameSite=Strict y duración de ocho horas.
  - `POST /api/auth/logout`: invalida la cookie del cliente.
  - `GET /`: demo pública; registra y muestra los metadatos HTTP permitidos de la solicitud.
+ - Las cuatro imágenes del collage de inicio se sirven desde `public/images/collage-01.jpg` hasta `public/images/collage-04.jpg`. Sube tus imágenes con esos nombres para reemplazar los fondos de muestra.
  - `POST /api/browser-observations`: acepta únicamente idioma, zona horaria, dimensiones de pantalla/ventana y preferencia de color; los escribe en logs, con límite de tamaño y frecuencia, sin persistirlos.
  - `GET /dashboard`: dashboard privado; requiere iniciar sesión.
  - `GET /api/events`: devuelve los últimos 200 eventos; requiere sesión.
